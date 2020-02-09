@@ -14,5 +14,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('api')->get('/login', 'LoginController@login');
-Route::middleware('api')->get('/register', 'RegisterController@register');
+Route::middleware('api')->post('/login', 'LoginController@login');
+Route::middleware('api')->post('/register', 'RegisterController@register');
