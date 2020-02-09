@@ -14,7 +14,6 @@ class CreateProductAttachmentTable extends Migration
     public function up()
     {
         Schema::create('product_attachment', function (Blueprint $table) {
-            $table->increments('id');
             $table->integer('attachment_id')->unsigned();
             $table->integer('product_id')->unsigned();
 
