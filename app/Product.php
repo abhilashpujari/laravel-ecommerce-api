@@ -14,4 +14,9 @@ class Product extends Model
     {
         return $this->belongsToMany('App\Attachment', 'product_attachment');
     }
+
+    public function orderItems()
+    {
+        return $this->hasMany('App\Order_Item');
+    }
 }

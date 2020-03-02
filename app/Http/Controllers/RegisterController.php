@@ -27,6 +27,6 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         $this->userServcie->register($request);
-       var_dump('hjhj'); die;
+        return response()->json();
     }
 }

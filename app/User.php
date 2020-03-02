@@ -26,4 +26,9 @@ class User extends Model
     {
         $this->attributes['password'] = Hash::make($pass);
     }
+
+    public function orders()
+    {
+        return $this->hasMany('App\Order');
+    }
 }
