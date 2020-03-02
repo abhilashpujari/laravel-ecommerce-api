@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProductAttachmentTable extends Migration
+class CreateOrderItemsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,22 @@ class CreateProductAttachmentTable extends Migration
      */
     public function up()
     {
-        Schema::create('product_attachment', function (Blueprint $table) {
-            $table->unsignedBigInteger('attachment_id');
-            $table->unsignedBigInteger('product_id');
+        Schema::create('order_items', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->float('unit_price');
+            $table->integer('qty');
 
-            $table->foreign('attachment_id')
-                ->references('id')->on('attachments')
+            $table->unsignedBigInteger('order_id');
+            $table->foreign('order_id')
+                ->references('id')->on('orders')
                 ->onDelete('cascade');
 
+            $table->unsignedBigInteger('product_id');
             $table->foreign('product_id')
                 ->references('id')->on('products')
                 ->onDelete('cascade');
+
+            $table->timestamps();
         });
     }
 
@@ -34,6 +39,6 @@ class CreateProductAttachmentTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('product_attachment');
+        Schema::dropIfExists('order_items');
     }
 }

@@ -14,7 +14,7 @@ class CreateProductsTable extends Migration
     public function up()
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('name');
             $table->text('description');
             $table->string('sku')->unique();
@@ -22,14 +22,14 @@ class CreateProductsTable extends Migration
             $table->integer('stock');
             $table->integer('qty');
             $table->float('unit_price');
+            $table->timestamps();
 
-            $table->integer('category_id')->unsigned();
+            $table->unsignedBigInteger('category_id');
             $table->foreign('category_id')
                 ->references('id')->on('categories')
                 ->onDelete('cascade');
-
-            $table->timestamps();
         });
+
     }
 
     /**
