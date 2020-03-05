@@ -1,5 +1,5 @@
 ## About
-Simple Laravel Api for an eccommerce
+Simple Api in Laravel for an eccommerce
 
 ## License
 
