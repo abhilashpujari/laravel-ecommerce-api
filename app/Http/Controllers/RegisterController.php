@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\UserService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /**
@@ -21,12 +22,13 @@ class RegisterController extends Controller
 
     /**
      * @param Request $request
-     * @param UserService $userService
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function register(Request $request)
     {
         $this->userServcie->register($request);
-        return response()->json();
+        return response()->json([
+            'message' => 'Registered successfully'
+        ]);
     }
 }

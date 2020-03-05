@@ -4,6 +4,8 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -44,12 +46,24 @@ class Handler extends ExceptionHandler
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Exception  $exception
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      *
      * @throws \Exception
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof HttpException) {
+            $statusCode = $exception->getStatusCode();
+
+            return response()->json(
+                [
+                    'code' => $statusCode,
+                    'message' => $exception->getMessage()
+                ],
+                $statusCode
+            );
+        }
+
         return parent::render($request, $exception);
     }
 }

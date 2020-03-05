@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Exceptions\HttpUnauthorizedException;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * Class UserService
@@ -29,9 +31,34 @@ class UserService extends BaseService
         ]);
 
         $user = new User();
-        $data = $request->only($user->getFillable());
-        $user->fill($data);
+        $this->mapDataToModel($request, $user);
         $this->save($user);
+
+        return $user;
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Query\Builder|object
+     * @throws HttpUnauthorizedException
+     */
+    public function authenticate(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ],
+        [
+            'email.required' => 'The :attribute field is required.',
+            'email.email' => 'The :attribute field should be valid email.',
+            'password.required' => 'The :attribute field is required.'
+        ]);
+
+        $user = $this->findOneBy('users', ['email' => $request->get('email')]);
+
+        if (!$user || !Hash::check($request->get('password'), $user->password)) {
+            throw new HttpUnauthorizedException('Invalid email or password');
+        }
 
         return $user;
     }
