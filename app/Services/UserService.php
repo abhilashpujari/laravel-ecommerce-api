@@ -32,7 +32,7 @@ class UserService extends BaseService
 
         $user = new User();
         $this->mapDataToModel($request, $user);
-        $this->save($user);
+        $user->save();
 
         return $user;
     }
@@ -54,7 +54,7 @@ class UserService extends BaseService
             'password.required' => 'The :attribute field is required.'
         ]);
 
-        $user = $this->findOneBy('users', ['email' => $request->get('email')]);
+        $user = User::where('email', $request->get('email'))->first();
 
         if (!$user || !Hash::check($request->get('password'), $user->password)) {
             throw new HttpUnauthorizedException('Invalid email or password');
