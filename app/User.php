@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Hash;
  */
 class User extends Model
 {
+    protected $appends = [
+        'full_name'
+    ];
+
     protected $fillable = [
         'email',
         'password',
@@ -21,6 +25,11 @@ class User extends Model
     protected $hidden = [
         'password',
     ];
+
+    public function getFullNameAttribute($pass)
+    {
+        return $this->attributes['first_name'] . ' ' . $this->attributes['last_name'];
+    }
 
     public function setPasswordAttribute($pass)
     {
