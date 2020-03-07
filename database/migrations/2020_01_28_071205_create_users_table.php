@@ -20,7 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('last_name')->nullable();
             $table->string('email')->unique()->nullable(false);
             $table->string('password')->nullable(false);
-            $table->string('role')->nullable(false)->default(Config::get('role.ROLE_USER'));
+            $table->string('role')->nullable(false)->default(Config::get('role.user'));
             $table->boolean('is_active')->nullable(false)->default(true);
             $table->timestamps();
         });
