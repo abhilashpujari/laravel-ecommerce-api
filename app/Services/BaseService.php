@@ -2,14 +2,9 @@
 
 namespace App\Services;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
-
+/**
+ * Class BaseService
+ * @package App\Services
+ */
 class BaseService
-{
-    public function mapDataToModel(Request $request, Model $model)
-    {
-        $data = $request->only($model->getFillable());
-        $model->fill($data);
-    }
-}
+{}

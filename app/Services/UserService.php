@@ -31,7 +31,7 @@ class UserService extends BaseService
         ]);
 
         $user = new User();
-        $this->mapDataToModel($request, $user);
+        $user->fill($request->only($user->getFillable()));
         $user->save();
 
         return $user;
