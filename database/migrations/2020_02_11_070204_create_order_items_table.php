@@ -16,6 +16,7 @@ class CreateOrderItemsTable extends Migration
         Schema::create('order_items', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->float('unit_price');
+            $table->float('extended_price');
             $table->integer('qty');
 
             $table->unsignedBigInteger('order_id');
