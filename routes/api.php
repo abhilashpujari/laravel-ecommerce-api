@@ -14,5 +14,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('api')->post('/login', 'LoginController@login');
-Route::middleware('api')->post('/register', 'RegisterController@register');
+Route::middleware(['api'])->group(function () {
+    Route::post('/login', 'LoginController@login')->name('login');
+    Route::post('/register', 'RegisterController@register')->name('register');
+
+
+    // Protected route requires valid token
+    Route::middleware(['protected.route'])->group(function () {
+        Route::get('/product', 'ProductController@list')->name('product_list');
+    });
+});
+
+
+
