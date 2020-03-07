@@ -2,13 +2,9 @@
 
 namespace App\Http\Middleware;
 
-use App\Exceptions\AppException;
-use App\Exceptions\HttpUnauthorizedException;
+use App\Auth\Header;
 use Closure;
-use Exception;
-use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 
 /**
  * Class ProtectedRoute
@@ -19,24 +15,13 @@ class ProtectedRoute
     /**
      * Handle an incoming request.
      *
-     * @param  Request  $request
-     * @param  Closure  $next
+     * @param Request $request
+     * @param Closure $next
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
     {
-        $token = $request->header('X-Auth-Token');
-
-        if (!$token) {
-            throw new HttpUnauthorizedException('Missing authentication token');
-        }
-
-        try {
-            $decodedToken = JWT::decode($token, Config::get('jwt.secret'), [Config::get('jwt.algo')]);
-        } catch (Exception $e) {
-            throw new HttpUnauthorizedException('Invalid token');
-        }
-
+        Header::decodeHeaderToken($request);
         return $next($request);
     }
 }
