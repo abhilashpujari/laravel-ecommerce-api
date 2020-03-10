@@ -4,6 +4,9 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Psr\Log\LogLevel;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -23,15 +26,12 @@ class Handler extends ExceptionHandler
      *
      * @var array
      */
-    protected $dontFlash = [
-        'password',
-        'password_confirmation',
-    ];
+    protected $dontFlash = [];
 
     /**
      * Report or log an exception.
      *
-     * @param  \Exception  $exception
+     * @param \Exception $exception
      * @return void
      *
      * @throws \Exception
@@ -44,14 +44,16 @@ class Handler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
+     * @param Request $request
+     * @param \Exception $exception
      * @return Response
      *
      * @throws \Exception
      */
     public function render($request, Exception $exception)
     {
+        $this->logExpection($exception, $request);
+
         if ($exception instanceof HttpException) {
             $statusCode = $exception->getStatusCode();
 
@@ -65,5 +67,111 @@ class Handler extends ExceptionHandler
         }
 
         return parent::render($request, $exception);
+    }
+
+    private function logExpection(Exception $exception, Request $request)
+    {
+        $json = $request->getContent();
+        $statusCode = $exception->getStatusCode();
+
+        switch ($statusCode) {
+            case 400:
+                // Bad Request
+                $this->log(
+                    LogLevel::NOTICE,
+                    '[400] ' . $exception->getMessage(),
+                    [
+                        'Request' => rawurldecode($request->getRequestUri()),
+                        'Method' => $request->getMethod(),
+                        'Json' => $json,
+                    ]
+                );
+                break;
+            case 401:
+                // Unauthorized
+                $this->log(
+                    LogLevel::NOTICE,
+                    '[401] ' . $exception->getMessage(),
+                    [
+                        'Request' => rawurldecode($request->getRequestUri()),
+                        'Method' => $request->getMethod(),
+                        'Json' => $json,
+                    ]
+                );
+                break;
+            case 403:
+                // Forbidden
+                $this->log(
+                    LogLevel::NOTICE,
+                    '[403] ' . $exception->getMessage(),
+                    [
+                        'Request' => rawurldecode($request->getRequestUri()),
+                        'Method' => $request->getMethod(),
+                    ]
+                );
+                break;
+            case 404:
+                // Not Found
+                $this->log(
+                    LogLevel::NOTICE,
+                    '[404] ' . $exception->getMessage(),
+                    [
+                        'Request' => rawurldecode($request->getRequestUri()),
+                    ]
+                );
+                break;
+            case 405:
+                // Method not allowed
+                $this->log(
+                    LogLevel::NOTICE,
+                    '[405] ' . $exception->getMessage(),
+                    [
+                        'Request' => rawurldecode($request->getRequestUri()),
+                        'Method' => $request->getMethod(),
+                    ]
+                );
+                break;
+            case 409:
+                // Conflict
+                $this->log(
+                    LogLevel::NOTICE,
+                    '[409] ' . $exception->getMessage(),
+                    [
+                        'Request' => rawurldecode($request->getRequestUri()),
+                        'Method' => $request->getMethod(),
+                        'Json' => $json,
+                    ]
+                );
+                break;
+            case 412:
+                // Precondition Failed
+                $this->log(
+                    LogLevel::NOTICE,
+                    '[412] ' . $exception->getMessage(),
+                    [
+                        'Request' => rawurldecode($request->getRequestUri()),
+                        'Method' => $request->getMethod(),
+                    ]
+                );
+                break;
+            default:
+                // Internal Server Error
+                $this->log(
+                    LogLevel::ERROR,
+                    '[500] ' . $exception->getMessage(),
+                    [
+                        'Request' => rawurldecode($request->getRequestUri()),
+                        'Method' => $request->getMethod(),
+                        'Json' => $json,
+                        'Stack Trace' => "\n" . $exception->getTraceAsString()
+                    ]
+                );
+        }
+    }
+
+    protected function log($logLevel, $message, array $context = [])
+    {
+        Log::$logLevel($message, $context);
+        return true;
     }
 }
