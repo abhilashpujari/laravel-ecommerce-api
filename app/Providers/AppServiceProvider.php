@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Auth\Header;
+use App\Auth\Auth;
 use App\Auth\Identity;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
@@ -20,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(Identity::class, function ($app) {
             try {
-                $decodedToken = Header::decodeHeaderToken(request());
+                $decodedToken = Auth::decodeAuthToken(request());
 
                 $role = $decodedToken->role;
                 $id = $decodedToken->id;

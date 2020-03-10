@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Auth\Header;
+use App\Auth\Auth;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -21,7 +21,7 @@ class ProtectedRoute
      */
     public function handle(Request $request, Closure $next)
     {
-        Header::decodeHeaderToken($request);
+        Auth::decodeAuthToken($request);
         return $next($request);
     }
 }
