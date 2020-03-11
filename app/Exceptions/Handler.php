@@ -69,106 +69,44 @@ class Handler extends ExceptionHandler
         return parent::render($request, $exception);
     }
 
+    /**
+     * @param Exception $exception
+     * @param Request $request
+     */
     private function logExpection(Exception $exception, Request $request)
     {
         $json = $request->getContent();
         $statusCode = $exception->getStatusCode();
 
-        switch ($statusCode) {
-            case 400:
-                // Bad Request
-                $this->log(
-                    LogLevel::NOTICE,
-                    '[400] ' . $exception->getMessage(),
-                    [
-                        'Request' => rawurldecode($request->getRequestUri()),
-                        'Method' => $request->getMethod(),
-                        'Json' => $json,
-                    ]
-                );
-                break;
-            case 401:
-                // Unauthorized
-                $this->log(
-                    LogLevel::NOTICE,
-                    '[401] ' . $exception->getMessage(),
-                    [
-                        'Request' => rawurldecode($request->getRequestUri()),
-                        'Method' => $request->getMethod(),
-                        'Json' => $json,
-                    ]
-                );
-                break;
-            case 403:
-                // Forbidden
-                $this->log(
-                    LogLevel::NOTICE,
-                    '[403] ' . $exception->getMessage(),
-                    [
-                        'Request' => rawurldecode($request->getRequestUri()),
-                        'Method' => $request->getMethod(),
-                    ]
-                );
-                break;
-            case 404:
-                // Not Found
-                $this->log(
-                    LogLevel::NOTICE,
-                    '[404] ' . $exception->getMessage(),
-                    [
-                        'Request' => rawurldecode($request->getRequestUri()),
-                    ]
-                );
-                break;
-            case 405:
-                // Method not allowed
-                $this->log(
-                    LogLevel::NOTICE,
-                    '[405] ' . $exception->getMessage(),
-                    [
-                        'Request' => rawurldecode($request->getRequestUri()),
-                        'Method' => $request->getMethod(),
-                    ]
-                );
-                break;
-            case 409:
-                // Conflict
-                $this->log(
-                    LogLevel::NOTICE,
-                    '[409] ' . $exception->getMessage(),
-                    [
-                        'Request' => rawurldecode($request->getRequestUri()),
-                        'Method' => $request->getMethod(),
-                        'Json' => $json,
-                    ]
-                );
-                break;
-            case 412:
-                // Precondition Failed
-                $this->log(
-                    LogLevel::NOTICE,
-                    '[412] ' . $exception->getMessage(),
-                    [
-                        'Request' => rawurldecode($request->getRequestUri()),
-                        'Method' => $request->getMethod(),
-                    ]
-                );
-                break;
-            default:
-                // Internal Server Error
-                $this->log(
-                    LogLevel::ERROR,
-                    '[500] ' . $exception->getMessage(),
-                    [
-                        'Request' => rawurldecode($request->getRequestUri()),
-                        'Method' => $request->getMethod(),
-                        'Json' => $json,
-                        'Stack Trace' => "\n" . $exception->getTraceAsString()
-                    ]
-                );
+        $context = [
+            'Request' => rawurldecode($request->getRequestUri()),
+            'Method' => $request->getMethod(),
+            'Json' => $json
+        ];
+
+        if ($statusCode === 500 || $statusCode === 0) {
+            $logLevel = LogLevel::ERROR;
+            $statusCode = 500;
+            $context = array_merge($context , [
+                'Stack Trace' => "\n" . $exception->getTraceAsString(),
+            ]);
+        } else {
+            $logLevel = LogLevel::NOTICE;
         }
+
+        $this->log(
+            $logLevel,
+            "[{$statusCode}] " . $exception->getMessage(),
+            $context
+        );
     }
 
+    /**
+     * @param $logLevel
+     * @param $message
+     * @param array $context
+     * @return bool
+     */
     protected function log($logLevel, $message, array $context = [])
     {
         Log::$logLevel($message, $context);

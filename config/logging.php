@@ -4,6 +4,8 @@ use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
 
+use Illuminate\Support\Facades\Config;
+
 return [
 
     /*
@@ -49,7 +51,7 @@ return [
 
         'daily' => [
             'driver' => 'daily',
-            'path' => storage_path('logs/laravel.log'),
+            'path' => storage_path('logs/' . Config::get('app.env') .  '.log'),
             'level' => 'debug',
             'days' => 14,
         ],
