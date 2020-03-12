@@ -18,7 +18,7 @@ class CreateProductsTable extends Migration
             $table->string('name');
             $table->text('description');
             $table->string('sku')->unique();
-            $table->boolean('is_active');
+            $table->boolean('is_active')->default(false);
             $table->integer('stock');
             $table->integer('qty');
             $table->float('unit_price');

@@ -21,6 +21,9 @@ Route::middleware(['api'])->group(function () {
 
     // Protected route requires valid token
     Route::middleware(['protected.route'])->group(function () {
+        Route::post('/category', 'CategoryController@create')->name('category_create');
+        Route::put('/category/{id}', 'CategoryController@update')->name('category_update');
+
         Route::get('/product', 'ProductController@list')->name('product_list');
     });
 });
