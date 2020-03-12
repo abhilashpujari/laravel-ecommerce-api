@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Auth\Identity;
+use Illuminate\Contracts\Container\BindingResolutionException;
 
 /**
  * Class BaseService
@@ -10,6 +11,10 @@ use App\Auth\Identity;
  */
 class BaseService
 {
+    /**
+     * @return mixed
+     * @throws BindingResolutionException
+     */
     protected function getIdentity()
     {
         return app()->make(Identity::class);

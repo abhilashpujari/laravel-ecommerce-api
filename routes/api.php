@@ -22,7 +22,10 @@ Route::middleware(['api'])->group(function () {
     // Protected route requires valid token
     Route::middleware(['protected.route'])->group(function () {
         Route::post('/category', 'CategoryController@create')->name('category_create');
+        Route::delete('/category/{id}', 'CategoryController@delete')->name('category_delete');
+        Route::get('/category', 'CategoryController@list')->name('category_list');
         Route::put('/category/{id}', 'CategoryController@update')->name('category_update');
+        Route::get('/category/{id}', 'CategoryController@view')->name('category_view');
 
         Route::get('/product', 'ProductController@list')->name('product_list');
     });

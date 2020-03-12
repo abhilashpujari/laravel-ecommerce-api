@@ -45,6 +45,23 @@ class CategoryService extends BaseService
     /**
      * @param Request $request
      * @param Category $category
+     * @throws \Exception
+     */
+    public function delete(Request $request, Category $category)
+    {
+        /** @var Identity $identity */
+        $identity = $this->getIdentity();
+
+        if ($identity->isSuperAdmin() || $identity->isAdmin()) {
+            $category->delete();
+        } else {
+            throw new HttpForbiddenException("You don't have access to this resource");
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @param Category $category
      * @return Category
      */
     public function update(Request $request, Category $category)
