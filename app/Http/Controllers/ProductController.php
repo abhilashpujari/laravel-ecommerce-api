@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\JsonResponse as Response;
 use Illuminate\Http\Request;
 
 /**
@@ -13,10 +13,14 @@ class ProductController extends Controller
 {
     /**
      * @param Request $request
-     * @return JsonResponse
+     * @param Response $response
+     * @return Response
      */
-    public function list(Request $request)
+    public function list(Request $request, Response $response)
     {
-        return response()->json(['message' => 'Hello']);
+        $response->setData();
+        $response->setStatusCode(200);
+
+        return $response;
     }
 }

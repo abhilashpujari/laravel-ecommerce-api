@@ -22,9 +22,9 @@ class AppServiceProvider extends ServiceProvider
             try {
                 $decodedToken = Auth::decodeAuthToken(request());
 
-                $role = $decodedToken->role;
-                $id = $decodedToken->id;
-                $fullName = $decodedToken->full_name;
+                $role = $decodedToken['role'];
+                $id = $decodedToken['id'];
+                $fullName = $decodedToken['fullName'];
             } catch (\Exception $e) {
                 $role = Config::get('role.guest');
                 $id = 0;

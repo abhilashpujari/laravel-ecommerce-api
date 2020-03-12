@@ -18,6 +18,7 @@ class Auth
     public static function decodeAuthToken(Request $request)
     {
         $token = $request->header('X-Auth-Token');
+
         if (!$token) {
             throw new HttpUnauthorizedException('Missing authentication token');
         }

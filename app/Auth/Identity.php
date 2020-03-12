@@ -42,6 +42,22 @@ class Identity
     }
 
     /**
+     * @return bool
+     */
+    public function isSuperAdmin()
+    {
+        return $this->getRole() === Config::get('role.super_admin');
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return $this->getRole() === Config::get('role.admin');
+    }
+
+    /**
      * @return string
      */
     public function getId()

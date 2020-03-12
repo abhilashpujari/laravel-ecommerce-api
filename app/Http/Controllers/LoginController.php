@@ -16,6 +16,9 @@ class LoginController extends Controller
     /** @var UserService $userServcie */
     public $userServcie;
 
+    /**
+     * LoginController constructor.
+     */
     public function __construct()
     {
         $this->userServcie = new UserService();

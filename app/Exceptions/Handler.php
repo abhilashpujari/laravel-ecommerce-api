@@ -76,7 +76,7 @@ class Handler extends ExceptionHandler
     private function logExpection(Exception $exception, Request $request)
     {
         $json = $request->getContent();
-        $statusCode = $exception->getStatusCode();
+        $statusCode = $exception->getCode();
 
         $context = [
             'Request' => rawurldecode($request->getRequestUri()),

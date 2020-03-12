@@ -21,7 +21,7 @@ class UserService extends BaseService
     {
         $request->validate([
             'email' => 'required|email|unique:users,email',
-            'password' => 'required'
+            'password' => 'required|min:3'
         ],
         [
             'email.required' => 'The :attribute field is required.',
@@ -54,7 +54,8 @@ class UserService extends BaseService
             'password.required' => 'The :attribute field is required.'
         ]);
 
-        $user = User::where('email', $request->get('email'))->first();
+        $user = User::where('email', $request->get('email'))
+            ->where('is_active', true)->first();
 
         if (!$user || !Hash::check($request->get('password'), $user->password)) {
             throw new HttpUnauthorizedException('Invalid email or password');
