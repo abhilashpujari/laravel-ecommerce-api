@@ -89,11 +89,9 @@ class ProductService extends BaseService
 
         if ($identity->isSuperAdmin() || $identity->isAdmin()) {
             $request->validate([
-                'sku' => 'required|min:3',
-                'name' => 'required|min:3',
-                'category.id' => 'required|integer',
+                'category.id' => 'integer',
                 'qty'=> 'integer',
-                'unit_price' => 'float',
+                'unit_price' => 'numeric',
                 'is_active' => 'boolean'
             ],
                 [
@@ -108,10 +106,11 @@ class ProductService extends BaseService
                 if (!$category) {
                     throw new HttpNotFoundException('Category not found with id ' . $requestData['category']['id']);
                 }
+
+                $product->category_id = $category->id;
             }
 
             $product->fill($request->only($product->getFillable()));
-            $product->category_id = $category->id;
             $this->checkForUniqueProduct($product);
             $product->update();
 
