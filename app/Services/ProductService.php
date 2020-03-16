@@ -89,13 +89,29 @@ class ProductService extends BaseService
 
         if ($identity->isSuperAdmin() || $identity->isAdmin()) {
             $request->validate([
+                'sku' => 'required|min:3',
+                'name' => 'required|min:3',
+                'category.id' => 'required|integer',
+                'qty'=> 'integer',
+                'unit_price' => 'float',
                 'is_active' => 'boolean'
             ],
                 [
                     'is_active.*' => 'The :attribute field must be boolean.'
                 ]);
 
+            $requestData = $request->all();
+
+            if (isset($requestData['category']['id'])) {
+                $category = Category::find($requestData['category']['id']);
+
+                if (!$category) {
+                    throw new HttpNotFoundException('Category not found with id ' . $requestData['category']['id']);
+                }
+            }
+
             $product->fill($request->only($product->getFillable()));
+            $product->category_id = $category->id;
             $this->checkForUniqueProduct($product);
             $product->update();
 
