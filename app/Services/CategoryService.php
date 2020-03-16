@@ -63,6 +63,7 @@ class CategoryService extends BaseService
      * @param Request $request
      * @param Category $category
      * @return Category
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function update(Request $request, Category $category)
     {

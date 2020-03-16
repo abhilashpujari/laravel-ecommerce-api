@@ -10,6 +10,15 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Product extends Model
 {
+    protected $fillable = [
+        'description',
+        'is_active',
+        'name',
+        'qty',
+        'sku',
+        'unit_price'
+    ];
+
     public function attachments()
     {
         return $this->belongsToMany('App\Attachment', 'product_attachment');
