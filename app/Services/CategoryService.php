@@ -6,6 +6,7 @@ use App\Auth\Identity;
 use App\Category;
 use App\Exceptions\HttpConflictException;
 use App\Exceptions\HttpForbiddenException;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\Request;
 
 /**
@@ -17,6 +18,7 @@ class CategoryService extends BaseService
     /**
      * @param Request $request
      * @return Category
+     * @throws BindingResolutionException
      */
     public function create(Request $request)
     {
@@ -63,7 +65,7 @@ class CategoryService extends BaseService
      * @param Request $request
      * @param Category $category
      * @return Category
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws BindingResolutionException
      */
     public function update(Request $request, Category $category)
     {

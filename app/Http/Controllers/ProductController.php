@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 class ProductController extends Controller
 {
     /** @var ProductService $productService */
-    public $productService;
+    protected $productService;
 
     /**
      * ProductController constructor.

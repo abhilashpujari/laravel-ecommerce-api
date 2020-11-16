@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 class RegisterController extends Controller
 {
     /** @var UserService $userServcie */
-    public $userServcie;
+    protected $userServcie;
 
     /**
      * RegisterController constructor.

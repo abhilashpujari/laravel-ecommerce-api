@@ -14,7 +14,7 @@ use Illuminate\Http\JsonResponse as Response;
 class LoginController extends Controller
 {
     /** @var UserService $userServcie */
-    public $userServcie;
+    protected $userServcie;
 
     /**
      * LoginController constructor.

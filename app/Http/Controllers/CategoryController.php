@@ -18,7 +18,7 @@ use Illuminate\Http\JsonResponse as Response;
 class CategoryController extends Controller
 {
     /** @var CategoryService $userServcie */
-    public $categoryService;
+    protected $categoryService;
 
     /**
      * CategoryController constructor.
@@ -84,6 +84,7 @@ class CategoryController extends Controller
      * @param Request $request
      * @param Response $response
      * @return Response
+     * @throws BindingResolutionException
      */
     public function update(Request $request, Response $response)
     {
